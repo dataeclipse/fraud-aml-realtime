@@ -1,0 +1,16 @@
+# Build context excludes - keep the image small and the build fast.
+data/
+mlruns/
+mlartifacts/
+notebooks/
+docs/
+tests/
+.venv/
+.git/
+*.db
+*.log
+*.parquet
+__pycache__/
+.mypy_cache/
+.ruff_cache/
+.pytest_cache/

@@ -1,0 +1,37 @@
+# Local stack for the real-time subsystem. Run from the project directory:
+#   docker compose -f infra/compose.yaml up --build
+name: fraud-aml
+
+services:
+  redpanda:
+    image: redpandadata/redpanda:latest
+    command:
+      - redpanda
+      - start
+      - --smp=1
+      - --overprovisioned
+      - --node-id=0
+      - --kafka-addr=PLAINTEXT://0.0.0.0:9092
+      - --advertise-kafka-addr=PLAINTEXT://redpanda:9092
+    ports:
+      - "9092:9092"
+
+  redis:
+    image: redis:7
+    ports:
+      - "6379:6379"
+
+  api:
+    build:
+      context: ..
+      dockerfile: infra/docker/Dockerfile
+    image: fraud-aml-api:latest
+    ports:
+      - "8000:8000"
+    environment:
+      FRAUD_LOG_LEVEL: ${FRAUD_LOG_LEVEL:-INFO}
+      FRAUD_KAFKA_BOOTSTRAP: redpanda:9092
+      FRAUD_REDIS_URL: redis://redis:6379/0
+    depends_on:
+      - redpanda
+      - redis

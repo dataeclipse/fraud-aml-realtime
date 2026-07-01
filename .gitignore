@@ -1,0 +1,57 @@
+# --- Python ---
+__pycache__/
+*.py[cod]
+*.egg-info/
+build/
+dist/
+
+# --- Virtual envs ---
+.venv/
+venv/
+
+# --- Environment / secrets (never commit secrets) ---
+.env
+.env.*
+!.env.example
+kaggle.json
+.kaggle/
+
+# --- Data (datasets are not committed; keep only README) ---
+data/*
+!data/README.md
+
+# --- ML artifacts / tracking ---
+mlruns/
+mlartifacts/
+mlflow.db
+*.db
+artifacts/
+
+# --- Baked model for Docker (created by the export step) ---
+deploy/*
+!deploy/.gitkeep
+*.parquet
+*.pkl
+*.joblib
+*.cbm
+*.pt
+
+# --- Logs ---
+*.log
+
+# --- Caches ---
+.mypy_cache/
+.ruff_cache/
+.pytest_cache/
+.coverage
+htmlcov/
+coverage.xml
+
+# --- Notebooks ---
+.ipynb_checkpoints/
+
+# --- OS / editors ---
+.DS_Store
+Thumbs.db
+.idea/
+.vscode/

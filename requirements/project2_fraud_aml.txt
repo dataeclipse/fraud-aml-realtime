@@ -1,0 +1,48 @@
+# Project 2 - Real-time fraud + AML on graphs (GNN)
+# Latest as of 2026-06-30 (floor). Pin exactly:
+#   uv pip compile requirements/project2_fraud_aml.txt -o requirements/project2_fraud_aml.lock.txt
+# NOTE: install torch / torch-geometric for GPU from the PyTorch index (see README);
+# install torch-geometric AFTER torch.
+# Python: 3.12 recommended.
+
+# --- data / core ML ---
+numpy>=2.4
+pandas>=2.2
+polars>=1.0
+scikit-learn>=1.8.0
+lightgbm>=4.6.0
+xgboost>=3.2.0
+imbalanced-learn>=0.13
+shap>=0.46
+
+# --- graphs / deep learning (GNN) ---
+torch>=2.12.0
+torch-geometric>=2.8.0
+networkx>=3.4
+# dgl>=2.4               # PyG alternative (install separately for your torch/CUDA build)
+
+# --- streaming / online features ---
+confluent-kafka>=2.6      # Kafka/Redpanda client (or kafka-python>=2.0)
+bytewax>=0.21             # stream processing (alternative: faust-streaming)
+feast>=0.40               # feature store
+redis>=5.2
+
+# --- serving / monitoring ---
+fastapi>=0.115
+uvicorn[standard]>=0.34
+pydantic>=2.11
+pydantic-settings>=2.6
+prometheus-client>=0.21
+evidently>=0.5
+mlflow>=2.18
+
+# --- load testing ---
+locust>=2.31
+
+# --- dev / code quality ---
+ruff>=0.7
+mypy>=1.13
+pytest>=8.3
+pytest-cov>=5.0
+pre-commit>=4.0
+structlog>=24.4
