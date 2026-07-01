@@ -43,10 +43,10 @@ PowerShell).
 docker compose -f infra/compose.stream.yaml up -d     # Redpanda + Redis + console (:8080)
 uv run fraud-aml-produce --speedup 1000               # replay by time (X data-seconds = X/speedup real-seconds)
 uv run fraud-aml-process                              # Bytewax fills Redis via Feast
-uv run fraud-aml-stream-demo --card 12345            # read online features for a card
+uv run fraud-aml-online-read --card 12345            # read online features for a card
 docker compose -f infra/compose.stream.yaml down
 ```
-The processor can also run in a container; the WSL/uv path is simpler for local demos.
+The processor can also run in a container; the WSL/uv path is simpler for local runs.
 
 ## Lag
 The producer stamps each event with `publish_ts`; the processor stamps `processed_ts` when it emits
@@ -56,4 +56,4 @@ processor. End-to-end lag to Redis includes the Feast push.
 ## Feast
 `feast_repo/` defines the `card` entity and the `card_window` FeatureView backed by a PushSource;
 online store is Redis, offline store is file (parquet). Apply once: `cd feast_repo && uv run feast
-apply`. The processor writes with `store.push(...)`; the demo reads with `store.get_online_features`.
+apply`. The processor writes with `store.push(...)`; the reader uses `store.get_online_features`.

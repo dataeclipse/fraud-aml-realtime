@@ -96,9 +96,9 @@ neighbor, the rest clean) - a compliance report. See [graph_aml.md](docs/graph_a
 decision logic, latency, explainability, limitations/risks, monitoring, governance (AML/CFT framing).
 
 ## Limitations
-Demo/portfolio (not a live fraud or AML decision): anonymized proxy features; temporal drift in
-fraud; the GNN does not beat the tabular baseline on Elliptic (by design of the dataset); the cost
-threshold depends on FN/FP prices; the live demo needs Docker.
+Not a live fraud or AML decision without independent validation: anonymized proxy features; temporal
+drift in fraud; the GNN does not beat the tabular baseline on Elliptic (by design of the dataset);
+the cost threshold depends on FN/FP prices; the live contour needs Docker.
 
 ## License
 [MIT](LICENSE).

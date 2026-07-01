@@ -10,7 +10,7 @@ Model card in the spirit of bank model validation and AML/CFT. Two subsystems, v
 | AML models | LightGBM tabular baseline, GraphSAGE, GAT (torch-geometric) |
 | Date | 2026-07-01 |
 | Owner / validator | dataeclipse (DS) / independent validation required before production |
-| Status | Release v1.0.0 (demo/portfolio, not a live lending or AML decision) |
+| Status | Release v1.0.0 (not a live lending or AML decision without independent validation) |
 
 ## 1. Purpose and scope
 - **A. Real-time fraud** - score a transaction at authorization time for a allow / review / block
@@ -103,5 +103,5 @@ remote); the local p99 is not the full production p99.
 ## 11. Governance and versioning
 Reproducible: fixed seeds, `uv.lock`, baked model (`fraud-aml-export-model` -> deploy/). Before any
 production use: independent model validation (back-testing, stability, fairness/AML review), a risk
-and compliance sign-off, and an audit trail of versions and decisions. Current status is
-demo/portfolio.
+and compliance sign-off, and an audit trail of versions and decisions. The current status is
+pre-production, pending that validation.

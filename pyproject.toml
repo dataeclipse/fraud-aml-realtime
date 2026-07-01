@@ -86,7 +86,7 @@ fraud-aml-fraud-baseline = "fraud_aml.fraud_model.train:main"
 fraud-aml-export-model = "fraud_aml.fraud_model.export_model:main"
 fraud-aml-produce = "fraud_aml.streaming.producer:main"
 fraud-aml-process = "fraud_aml.streaming.processor:main"
-fraud-aml-stream-demo = "fraud_aml.streaming.online_store:main"
+fraud-aml-online-read = "fraud_aml.streaming.online_store:main"
 fraud-aml-graph-ingest = "fraud_aml.graph_aml.data:main"
 fraud-aml-graph-train = "fraud_aml.graph_aml.train:main"
 
