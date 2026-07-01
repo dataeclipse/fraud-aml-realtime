@@ -58,6 +58,7 @@ graph = [
 ]
 ml = ["fraud-aml[tabular]", "fraud-aml[graph]"]
 stream = [
+    "fraud-aml[data]",
     "confluent-kafka>=2.6",
     "bytewax>=0.21",
     "feast>=0.40",
@@ -150,6 +151,12 @@ ignore_missing_imports = true
 [[tool.mypy.overrides]]
 module = ["pandas", "pandas.*"]
 ignore_missing_imports = true
+
+# processor.py touches bytewax (typed when installed, Any when absent). The type:ignore on the
+# untyped run_main is used in the stream env and unused in the data-only CI env - do not flag it.
+[[tool.mypy.overrides]]
+module = "fraud_aml.streaming.processor"
+warn_unused_ignores = false
 
 [tool.pytest.ini_options]
 testpaths = ["tests"]
