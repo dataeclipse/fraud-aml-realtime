@@ -55,3 +55,6 @@ coverage.xml
 Thumbs.db
 .idea/
 .vscode/
+
+# Claude Code memory file - local only
+**/CLAUDE.md
