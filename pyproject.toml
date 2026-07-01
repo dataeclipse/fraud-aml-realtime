@@ -19,34 +19,44 @@ dependencies = [
 
 # Extras (floor pins from requirements/project2_fraud_aml.txt):
 #   data   - light data/EDA layer (Phase 1): polars/pandas/sklearn/pyarrow/kaggle. CI installs this.
-#   ml     - heavy models: tabular fraud (lightgbm/xgboost/shap) + GNN (torch/torch-geometric); includes data.
-#   stream - streaming and online features (kafka/bytewax/feast/redis).
-#   serve  - lean Docker runtime for the fraud scorer (no torch/mlflow).
+#   tabular - tabular fraud (lightgbm/xgboost/shap/mlflow), no torch. Used by Phase 1 and fraud CI.
+#   graph   - GNN (torch/torch-geometric/networkx). Used by Phase 4.
+#   ml      - convenience union of tabular + graph.
+#   stream  - streaming and online features (kafka/bytewax/feast/redis).
+#   serve   - lean Docker runtime for the fraud scorer (no torch/mlflow).
 [project.optional-dependencies]
 data = [
-    # <2.5: numba (via shap, extra ml) does not support numpy 2.5 yet.
+    # <2.5: numba (via shap, extra tabular) does not support numpy 2.5 yet.
     "numpy>=2.4,<2.5",
     "pandas>=2.2",
     "polars>=1.0",
     "pyarrow>=17.0",
     "scikit-learn>=1.8.0",
-    "kaggle>=1.6",
+    "kaggle>=1.6,<1.7",
     "python-dotenv>=1.0",
+    "matplotlib>=3.9",
+    "seaborn>=0.13",
+    "ipykernel>=6.29",
+    "nbconvert>=7.16",
 ]
-ml = [
+tabular = [
     "fraud-aml[data]",
     "lightgbm>=4.6.0",
     "xgboost>=3.2.0",
     "imbalanced-learn>=0.13",
     "shap>=0.46",
-    # torch from PyPI (CPU) for a reproducible lock; install the GPU/CUDA build from the
-    # PyTorch index (see README). torch-geometric resolves AFTER torch.
-    "torch>=2.12.0",
-    "torch-geometric>=2.8.0",
-    "networkx>=3.4",
     "mlflow>=2.18",
     "evidently>=0.5",
 ]
+# torch from PyPI (CPU) for a reproducible lock; install the GPU/CUDA build from the
+# PyTorch index (see README). torch-geometric resolves AFTER torch.
+graph = [
+    "fraud-aml[data]",
+    "torch>=2.12.0",
+    "torch-geometric>=2.8.0",
+    "networkx>=3.4",
+]
+ml = ["fraud-aml[tabular]", "fraud-aml[graph]"]
 stream = [
     "confluent-kafka>=2.6",
     "bytewax>=0.21",
@@ -60,6 +70,11 @@ serve = [
     "lightgbm>=4.6.0",
 ]
 loadtest = ["locust>=2.31"]
+
+[project.scripts]
+fraud-aml-ingest = "fraud_aml.data.download:main"
+fraud-aml-eda = "fraud_aml.eda:main"
+fraud-aml-fraud-baseline = "fraud_aml.fraud_model.train:main"
 
 [dependency-groups]
 dev = [
@@ -124,6 +139,8 @@ module = [
     "feast.*",
     "redis.*",
     "locust.*",
+    "matplotlib.*",
+    "seaborn.*",
 ]
 ignore_missing_imports = true
 

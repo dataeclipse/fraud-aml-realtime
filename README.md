@@ -67,14 +67,24 @@ GPU note: install `torch` (and then `torch-geometric`) from the PyTorch CUDA ind
 `uv.lock` pins the CPU build from PyPI for reproducibility. Install `torch-geometric` after `torch`.
 
 ## Results
-Filled per phase (PR-AUC and cost-based threshold for fraud; illicit F1 for the GNN vs the tabular
-baseline).
+**Phase 1 - tabular fraud baseline** (IEEE-CIS, 590,540 rows x 434 columns, ~3.5% fraud, time-based
+split). LightGBM with `scale_pos_weight`, honest late-period test:
+
+| Metric | Validation | Test (late period) |
+|---|---|---|
+| PR-AUC | 0.394 | 0.263 |
+| ROC-AUC | 0.879 | 0.845 |
+
+The PR-AUC drop from validation to the later test period is temporal drift that a time-based split
+exposes and a random split would hide. Threshold picked by expected cost (FN=10, FP=1). Details:
+[docs/fraud_baseline.md](docs/fraud_baseline.md), [docs/split.md](docs/split.md),
+[docs/eda.md](docs/eda.md), curve: [docs/img/pr_curve.png](docs/img/pr_curve.png).
 
 ## Roadmap
 | Phase | Content |
 |---|---|
 | 0 ✅ | Skeleton: structure, uv/pyproject + extras, ruff/mypy/pytest/pre-commit, CI, `/healthz` |
-| 1 | Tabular fraud baseline (IEEE-CIS): merge, features, imbalance, LightGBM, cost-based threshold |
+| 1 ✅ | Tabular fraud baseline (IEEE-CIS): time-based split, LightGBM, cost threshold, MLflow (test ROC-AUC 0.845) |
 | 2 | Streaming + online features (Kafka/Redpanda replay, Bytewax windows, Feast/Redis) |
 | 3 | Real-time service + rule engine, allow/review/block, p99 SLA, Prometheus |
 | 4 | Graph AML (GNN on Elliptic), beats tabular baseline on illicit F1, subgraph explanations |

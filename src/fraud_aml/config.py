@@ -23,6 +23,13 @@ class Settings(BaseSettings):
     review_at: float = 0.3
     block_at: float = 0.7
 
+    train_frac: float = 0.6
+    val_frac: float = 0.2
+    fraud_fn_cost: float = 10.0
+    fraud_fp_cost: float = 1.0
+    target_precision: float = 0.9
+    target_recall: float = 0.5
+
 
 @lru_cache
 def get_settings() -> Settings:
