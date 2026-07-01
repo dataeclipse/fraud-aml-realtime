@@ -81,6 +81,8 @@ fraud-aml-export-model = "fraud_aml.fraud_model.export_model:main"
 fraud-aml-produce = "fraud_aml.streaming.producer:main"
 fraud-aml-process = "fraud_aml.streaming.processor:main"
 fraud-aml-stream-demo = "fraud_aml.streaming.online_store:main"
+fraud-aml-graph-ingest = "fraud_aml.graph_aml.data:main"
+fraud-aml-graph-train = "fraud_aml.graph_aml.train:main"
 
 [dependency-groups]
 dev = [
@@ -158,6 +160,12 @@ ignore_missing_imports = true
 # untyped run_main is used in the stream env and unused in the data-only CI env - do not flag it.
 [[tool.mypy.overrides]]
 module = "fraud_aml.streaming.processor"
+warn_unused_ignores = false
+
+# gnn.py touches torch (typed when installed, Any when absent). The type:ignore on the untyped
+# loss.backward is used in the graph env and unused in the data-only CI env - do not flag it.
+[[tool.mypy.overrides]]
+module = "fraud_aml.graph_aml.gnn"
 warn_unused_ignores = false
 
 [tool.pytest.ini_options]

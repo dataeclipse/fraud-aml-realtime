@@ -85,6 +85,12 @@ the baked LightGBM scores the transaction; rules only escalate to review/block. 
 56.5 ms / p99 70.9 ms (excludes the Feast round-trip). The bottleneck is feature-build, not the
 native `pred_contrib` reason codes. Details: [docs/serving.md](docs/serving.md).
 
+**Phase 4 - graph AML (Elliptic)**: temporal split (train timestep <= 34, test > 34). Honest finding:
+a gradient-boosted tabular model beats a vanilla GraphSAGE/GAT on illicit F1 on BOTH the full 165
+features (0.81 vs 0.53) and the local 94 (0.76 vs 0.43), consistent with Weber et al. 2019. The value
+is the methodological conclusion - know when NOT to reach for a GNN - plus a suspicious-subgraph
+report. Details: [docs/graph_aml.md](docs/graph_aml.md).
+
 ## Roadmap
 | Phase | Content |
 |---|---|
@@ -92,7 +98,7 @@ native `pred_contrib` reason codes. Details: [docs/serving.md](docs/serving.md).
 | 1 ✅ | Tabular fraud baseline (IEEE-CIS): time-based split, LightGBM, cost threshold, MLflow (test ROC-AUC 0.845) |
 | 2 ✅ | Streaming: Redpanda replay + Bytewax windows + Feast/Redis; one update_window for batch and stream (no skew) |
 | 3 ✅ | Real-time /score: online features + LightGBM + rule engine -> allow/review/block, Prometheus, latency budget |
-| 4 | Graph AML (GNN on Elliptic), beats tabular baseline on illicit F1, subgraph explanations |
+| 4 ✅ | Graph AML on Elliptic: temporal split, tabular vs GraphSAGE/GAT (full + local features), honest finding, subgraph explain |
 | 5 | Monitoring + compose (kafka/redis/api/prometheus), demo, model card |
 
 ## License

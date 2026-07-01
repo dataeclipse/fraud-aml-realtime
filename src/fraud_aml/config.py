@@ -42,6 +42,11 @@ class Settings(BaseSettings):
     block_score: float = 0.10
     model_version_label: str = "phase1-lgbm"
 
+    elliptic_cutoff: int = 34
+    gnn_hidden: int = 64
+    gnn_epochs: int = 100
+    gnn_lr: float = 0.01
+
 
 @lru_cache
 def get_settings() -> Settings:
