@@ -36,7 +36,6 @@ flowchart TD
 ```
 
 ## Data
-Both real, from Kaggle. `data/` is in `.gitignore`.
 - **IEEE-CIS Fraud Detection** - 590,540 transactions x 434 columns, ~3.5% fraud. Subsystem A.
 - **Elliptic Data Set** - 203,769-node Bitcoin graph, 165 features, 234,355 edges, 49 time steps,
   9.8% illicit among labeled. Subsystem B.
@@ -100,16 +99,6 @@ decision logic, latency, explainability, limitations/risks, monitoring, governan
 Demo/portfolio (not a live fraud or AML decision): anonymized proxy features; temporal drift in
 fraud; the GNN does not beat the tabular baseline on Elliptic (by design of the dataset); the cost
 threshold depends on FN/FP prices; the live demo needs Docker.
-
-## Roadmap
-| Phase | Content |
-|---|---|
-| 0 ✅ | Skeleton: structure, uv extras, ruff/mypy/pytest, CI, `/healthz` |
-| 1 ✅ | Tabular fraud baseline (IEEE-CIS): time split, LightGBM, cost threshold, MLflow |
-| 2 ✅ | Streaming: Redpanda replay + Bytewax windows + Feast/Redis, no skew |
-| 3 ✅ | Real-time `/score` + rule engine, allow/review/block, latency budget, Prometheus |
-| 4 ✅ | Graph AML on Elliptic: temporal split, tabular vs GraphSAGE/GAT, honest finding, subgraph |
-| 5 ✅ | Docker/compose full contour + CI image build + model card + README |
 
 ## License
 [MIT](LICENSE).
