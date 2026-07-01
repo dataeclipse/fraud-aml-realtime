@@ -1346,6 +1346,7 @@ ml = [
     { name = "xgboost" },
 ]
 serve = [
+    { name = "joblib" },
     { name = "lightgbm" },
     { name = "numpy" },
     { name = "pandas" },
@@ -1413,6 +1414,7 @@ requires-dist = [
     { name = "fraud-aml", extras = ["tabular"], marker = "extra == 'ml'" },
     { name = "imbalanced-learn", marker = "extra == 'tabular'", specifier = ">=0.13" },
     { name = "ipykernel", marker = "extra == 'data'", specifier = ">=6.29" },
+    { name = "joblib", marker = "extra == 'serve'", specifier = ">=1.4" },
     { name = "kaggle", marker = "extra == 'data'", specifier = ">=1.6,<1.7" },
     { name = "lightgbm", marker = "extra == 'serve'", specifier = ">=4.6.0" },
     { name = "lightgbm", marker = "extra == 'tabular'", specifier = ">=4.6.0" },

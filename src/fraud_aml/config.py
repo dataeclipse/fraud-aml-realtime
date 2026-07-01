@@ -35,6 +35,13 @@ class Settings(BaseSettings):
     speedup: float = 1000.0
     online_ttl_seconds: int = 86400
 
+    win_count_limit: float = 20.0
+    win_sum_limit: float = 5000.0
+    win_velocity_limit: float = 5.0
+    review_score: float = 0.03
+    block_score: float = 0.10
+    model_version_label: str = "phase1-lgbm"
+
 
 @lru_cache
 def get_settings() -> Settings:

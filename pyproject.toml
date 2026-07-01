@@ -69,6 +69,7 @@ serve = [
     "pandas>=2.2",
     "scikit-learn>=1.8.0",
     "lightgbm>=4.6.0",
+    "joblib>=1.4",
 ]
 loadtest = ["locust>=2.31"]
 
@@ -76,6 +77,7 @@ loadtest = ["locust>=2.31"]
 fraud-aml-ingest = "fraud_aml.data.download:main"
 fraud-aml-eda = "fraud_aml.eda:main"
 fraud-aml-fraud-baseline = "fraud_aml.fraud_model.train:main"
+fraud-aml-export-model = "fraud_aml.fraud_model.export_model:main"
 fraud-aml-produce = "fraud_aml.streaming.producer:main"
 fraud-aml-process = "fraud_aml.streaming.processor:main"
 fraud-aml-stream-demo = "fraud_aml.streaming.online_store:main"
@@ -149,7 +151,7 @@ module = [
 ignore_missing_imports = true
 
 [[tool.mypy.overrides]]
-module = ["pandas", "pandas.*"]
+module = ["pandas", "pandas.*", "joblib", "joblib.*", "prometheus_client"]
 ignore_missing_imports = true
 
 # processor.py touches bytewax (typed when installed, Any when absent). The type:ignore on the

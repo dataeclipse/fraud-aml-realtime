@@ -48,6 +48,27 @@ def _numeric_base(df: pd.DataFrame) -> pd.DataFrame:
     return numeric.drop(columns=drop)
 
 
+def fit_encoders(train_df: pd.DataFrame, y_train: Any) -> tuple[FrequencyEncoder, TargetEncoder]:
+    freq_cols = [c for c in _FREQ_COLS if c in train_df.columns]
+    te_cols = [c for c in _TE_COLS if c in train_df.columns]
+    freq = FrequencyEncoder(freq_cols).fit(train_df)
+    te = TargetEncoder(te_cols).fit(train_df, y_train)
+    return freq, te
+
+
+def assemble_features(
+    df: pd.DataFrame,
+    freq: FrequencyEncoder,
+    te: TargetEncoder,
+    feature_order: list[str] | None = None,
+) -> pd.DataFrame:
+    frame = pd.concat([_numeric_base(df), freq.transform(df), te.transform(df)], axis=1)
+    frame = frame.loc[:, ~frame.columns.duplicated()]
+    if feature_order is not None:
+        frame = frame.reindex(columns=feature_order)
+    return frame
+
+
 def build_fraud_dataset(settings: Settings, *, use_cache: bool = True) -> FraudDataset:
     df = add_all(load_merged(use_cache=use_cache))
     split = time_based_split(
@@ -55,14 +76,8 @@ def build_fraud_dataset(settings: Settings, *, use_cache: bool = True) -> FraudD
     )
 
     y = df[TARGET].astype(int)
-    freq_cols = [c for c in _FREQ_COLS if c in df.columns]
-    te_cols = [c for c in _TE_COLS if c in df.columns]
-
-    freq = FrequencyEncoder(freq_cols).fit(df.loc[split.train_idx])
-    te = TargetEncoder(te_cols).fit(df.loc[split.train_idx], y.loc[split.train_idx])
-
-    features = pd.concat([_numeric_base(df), freq.transform(df), te.transform(df)], axis=1)
-    features = features.loc[:, ~features.columns.duplicated()]
+    freq, te = fit_encoders(df.loc[split.train_idx], y.loc[split.train_idx])
+    features = assemble_features(df, freq, te)
     feature_names = [str(c) for c in features.columns]
 
     dt = df[TIME]

@@ -80,13 +80,18 @@ exposes and a random split would hide. Threshold picked by expected cost (FN=10,
 [docs/fraud_baseline.md](docs/fraud_baseline.md), [docs/split.md](docs/split.md),
 [docs/eda.md](docs/eda.md), curve: [docs/img/pr_curve.png](docs/img/pr_curve.png).
 
+**Phase 3 - real-time /score**: online window features from Feast/Redis feed a velocity rule engine;
+the baked LightGBM scores the transaction; rules only escalate to review/block. Local latency p50
+56.5 ms / p99 70.9 ms (excludes the Feast round-trip). The bottleneck is feature-build, not the
+native `pred_contrib` reason codes. Details: [docs/serving.md](docs/serving.md).
+
 ## Roadmap
 | Phase | Content |
 |---|---|
 | 0 ✅ | Skeleton: structure, uv/pyproject + extras, ruff/mypy/pytest/pre-commit, CI, `/healthz` |
 | 1 ✅ | Tabular fraud baseline (IEEE-CIS): time-based split, LightGBM, cost threshold, MLflow (test ROC-AUC 0.845) |
 | 2 ✅ | Streaming: Redpanda replay + Bytewax windows + Feast/Redis; one update_window for batch and stream (no skew) |
-| 3 | Real-time service + rule engine, allow/review/block, p99 SLA, Prometheus |
+| 3 ✅ | Real-time /score: online features + LightGBM + rule engine -> allow/review/block, Prometheus, latency budget |
 | 4 | Graph AML (GNN on Elliptic), beats tabular baseline on illicit F1, subgraph explanations |
 | 5 | Monitoring + compose (kafka/redis/api/prometheus), demo, model card |
 

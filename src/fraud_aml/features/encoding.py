@@ -19,7 +19,8 @@ class FrequencyEncoder:
         out = pd.DataFrame(index=df.index)
         for col in self.columns:
             mapping = self.maps.get(col, {})
-            out[f"{col}_freq"] = df[col].map(mapping).fillna(0).astype("float32")
+            series = df[col] if col in df.columns else pd.Series(index=df.index, dtype="object")
+            out[f"{col}_freq"] = series.map(mapping).fillna(0).astype("float32")
         return out
 
 
@@ -44,5 +45,6 @@ class TargetEncoder:
         out = pd.DataFrame(index=df.index)
         for col in self.columns:
             mapping = self.maps.get(col, {})
-            out[f"{col}_te"] = df[col].map(mapping).fillna(self.prior).astype("float32")
+            series = df[col] if col in df.columns else pd.Series(index=df.index, dtype="object")
+            out[f"{col}_te"] = series.map(mapping).fillna(self.prior).astype("float32")
         return out
