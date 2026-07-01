@@ -75,6 +75,9 @@ loadtest = ["locust>=2.31"]
 fraud-aml-ingest = "fraud_aml.data.download:main"
 fraud-aml-eda = "fraud_aml.eda:main"
 fraud-aml-fraud-baseline = "fraud_aml.fraud_model.train:main"
+fraud-aml-produce = "fraud_aml.streaming.producer:main"
+fraud-aml-process = "fraud_aml.streaming.processor:main"
+fraud-aml-stream-demo = "fraud_aml.streaming.online_store:main"
 
 [dependency-groups]
 dev = [

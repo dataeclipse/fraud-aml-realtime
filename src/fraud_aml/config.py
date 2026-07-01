@@ -30,6 +30,11 @@ class Settings(BaseSettings):
     target_precision: float = 0.9
     target_recall: float = 0.5
 
+    stream_topic: str = "transactions"
+    window_seconds: int = 3600
+    speedup: float = 1000.0
+    online_ttl_seconds: int = 86400
+
 
 @lru_cache
 def get_settings() -> Settings:

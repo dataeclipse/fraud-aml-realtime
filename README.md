@@ -85,7 +85,7 @@ exposes and a random split would hide. Threshold picked by expected cost (FN=10,
 |---|---|
 | 0 ✅ | Skeleton: structure, uv/pyproject + extras, ruff/mypy/pytest/pre-commit, CI, `/healthz` |
 | 1 ✅ | Tabular fraud baseline (IEEE-CIS): time-based split, LightGBM, cost threshold, MLflow (test ROC-AUC 0.845) |
-| 2 | Streaming + online features (Kafka/Redpanda replay, Bytewax windows, Feast/Redis) |
+| 2 ✅ | Streaming: Redpanda replay + Bytewax windows + Feast/Redis; one update_window for batch and stream (no skew) |
 | 3 | Real-time service + rule engine, allow/review/block, p99 SLA, Prometheus |
 | 4 | Graph AML (GNN on Elliptic), beats tabular baseline on illicit F1, subgraph explanations |
 | 5 | Monitoring + compose (kafka/redis/api/prometheus), demo, model card |

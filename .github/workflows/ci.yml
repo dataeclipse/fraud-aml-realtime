@@ -55,3 +55,23 @@ jobs:
 
       - name: Pytest (fraud)
         run: uv run pytest -m fraud
+
+  tests-stream:
+    name: tests (stream)
+    runs-on: ubuntu-latest
+    steps:
+      - name: Checkout
+        uses: actions/checkout@v4
+
+      - name: Install uv
+        uses: astral-sh/setup-uv@v5
+        with:
+          version: "0.11.25"
+          enable-cache: true
+          cache-dependency-glob: "uv.lock"
+
+      - name: Sync (stream stack)
+        run: uv sync --frozen --extra stream
+
+      - name: Pytest (stream, in-memory Bytewax)
+        run: uv run pytest -m stream
