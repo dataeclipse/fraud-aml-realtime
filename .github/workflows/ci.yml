@@ -95,3 +95,34 @@ jobs:
 
       - name: Pytest (graph, tiny GNN forward)
         run: uv run pytest -m graph
+
+  docker:
+    name: docker build + smoke
+    runs-on: ubuntu-latest
+    if: github.event_name == 'push'
+    steps:
+      - name: Checkout
+        uses: actions/checkout@v4
+
+      - name: Set up Buildx
+        uses: docker/setup-buildx-action@v3
+
+      - name: Build image (api stack)
+        uses: docker/build-push-action@v6
+        with:
+          context: .
+          file: infra/docker/Dockerfile
+          tags: fraud-aml-api:ci
+          load: true
+          cache-from: type=gha
+          cache-to: type=gha,mode=max
+
+      - name: Smoke /healthz (no model -> degraded, but 200)
+        run: |
+          docker run -d --name api -p 8000:8000 fraud-aml-api:ci
+          for i in $(seq 1 30); do
+            code=$(curl -s -o /dev/null -w "%{http_code}" http://localhost:8000/healthz || true)
+            if [ "$code" = "200" ]; then echo "healthz=200 OK"; docker rm -f api; exit 0; fi
+            sleep 2
+          done
+          echo "healthz did not return 200"; docker logs api; exit 1

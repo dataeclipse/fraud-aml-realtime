@@ -1,5 +1,7 @@
-# Local stack for the real-time subsystem. Run from the project directory:
-#   docker compose -f infra/compose.yaml up --build
+# Full real-time contour. Run from the project directory:
+#   docker compose -f infra/compose.yaml up --build -d
+# Then run the producer and processor via uv (see docs/serving.md). Prometheus is optional:
+#   docker compose -f infra/compose.yaml --profile monitoring up -d
 name: fraud-aml
 
 services:
@@ -12,7 +14,7 @@ services:
       - --overprovisioned
       - --node-id=0
       - --kafka-addr=PLAINTEXT://0.0.0.0:9092
-      - --advertise-kafka-addr=PLAINTEXT://redpanda:9092
+      - --advertise-kafka-addr=PLAINTEXT://localhost:9092
     ports:
       - "9092:9092"
 
@@ -20,6 +22,11 @@ services:
     image: redis:7
     ports:
       - "6379:6379"
+    healthcheck:
+      test: ["CMD", "redis-cli", "ping"]
+      interval: 5s
+      timeout: 3s
+      retries: 10
 
   api:
     build:
@@ -30,8 +37,28 @@ services:
       - "8000:8000"
     environment:
       FRAUD_LOG_LEVEL: ${FRAUD_LOG_LEVEL:-INFO}
-      FRAUD_KAFKA_BOOTSTRAP: redpanda:9092
       FRAUD_REDIS_URL: redis://redis:6379/0
+      FRAUD_KAFKA_BOOTSTRAP: redpanda:9092
     depends_on:
-      - redpanda
-      - redis
+      redis:
+        condition: service_healthy
+    healthcheck:
+      test:
+        - CMD
+        - python
+        - -c
+        - import urllib.request,sys; sys.exit(0 if urllib.request.urlopen('http://localhost:8000/healthz').status==200 else 1)
+      interval: 15s
+      timeout: 3s
+      retries: 5
+      start_period: 25s
+
+  prometheus:
+    profiles: ["monitoring"]
+    image: prom/prometheus:latest
+    ports:
+      - "9090:9090"
+    volumes:
+      - ./prometheus.yml:/etc/prometheus/prometheus.yml:ro
+    depends_on:
+      - api

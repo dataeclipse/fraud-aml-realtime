@@ -1,12 +1,15 @@
-# Build context excludes - keep the image small and the build fast.
+# Build context excludes. deploy/ and feast_repo/ are kept (baked model + feature repo).
 data/
 mlruns/
 mlartifacts/
 notebooks/
 docs/
 tests/
+loadtest/
+feast_repo/data/
 .venv/
 .git/
+.github/
 *.db
 *.log
 *.parquet

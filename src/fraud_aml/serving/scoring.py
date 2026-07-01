@@ -30,7 +30,10 @@ class ScoringService:
             return {}
         from fraud_aml.streaming.online_store import read_online
 
-        raw = read_online(self.feast_store, card1)
+        try:
+            raw = read_online(self.feast_store, card1)
+        except Exception:
+            return {}
         out: dict[str, float] = {}
         for key in _ONLINE_KEYS:
             value = raw.get(key)
